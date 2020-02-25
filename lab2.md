@@ -110,6 +110,7 @@ If you don't have python install locally, don't worry! Because you don't need it
 
     ```sh
     $ docker image build -t $DOCKER_USER/python-hello-world:v1 .
+
     Sending build context to Docker daemon  3.072kB
     Step 1/4 : FROM python:3.6.1-alpine
     3.6.1-alpine: Pulling from library/python
@@ -172,16 +173,18 @@ Now that you have built the image, you can run it to see that it works.
 1. Run the Docker image
 
     ```sh
-    $ docker run --name python-$DOCKER_USER -p 5000:5000 -d $DOCKER_USER/python-hello-world:v1
+    $ docker run --name python-$DOCKER_USER -p <YOUR PORT>:5000 -d $DOCKER_USER/python-hello-world:v1
     0b2ba61df37fb4038d9ae5d145740c63c2c211ae2729fc27dc01b82b5aaafa26
     ```
 
+    `YOUR PORT` = 5000 + `your user#`. For example, for `user040`, the port# is `5040`. 
+
     The `-p` flag maps a port running inside the container to your host. In this case, we are mapping the python app running on port 5000 inside the container, to an external port on your host.
 
-1. curl `http://localhost:5000` to see the results. 
+1. curl `http://localhost:<YOUR PORT>` to see the results. 
 
     ```sh
-    $ curl http://localhost:5000
+    $ curl http://localhost:<YOUR PORT>
     hello world
     ```
 
@@ -193,6 +196,7 @@ Now that you have built the image, you can run it to see that it works.
 
     ```sh
     $ docker container logs python-$DOCKER_USER 
+
     * Serving Flask app "app" (lazy loading)
     * Environment: production
       WARNING: This is a development server. Do not use it in a production deployment.
@@ -218,6 +222,7 @@ Now that you have built the image, you can run it to see that it works.
 
     ```sh
     $ docker push $DOCKER_USER/python-hello-world:v1
+
     The push refers to a repository [docker.io/jzaccone/python-hello-world]
     2bce026769ac: Pushed 
     64d445ecbe93: Pushed 
@@ -266,6 +271,7 @@ The "hello world!" application is overrated, let's update the app so that it say
 
     ```sh
     $  docker image build -t $DOCKER_USER/python-hello-world:v2 .
+    
     Sending build context to Docker daemon  3.072kB
     Step 1/4 : FROM python:3.6.1-alpine
     ---> c86415c03c37
@@ -287,10 +293,10 @@ The "hello world!" application is overrated, let's update the app so that it say
 1. Test your image locally. 
 
     ```sh
-    $ docker run -p 5000:5000 -d $DOCKER_USER/python-hello-world:v2
+    $ docker run -p <YOUR PORT>:5000 -d $DOCKER_USER/python-hello-world:v2
     0b2ba61df37fb4038d9ae5d145740c63c2c211ae2729fc27dc01b82b5aaafa26
 
-    $ curl http://localhost:5000
+    $ curl http://localhost:<YOUR PORT>
     hello beatiful world!
     ```
 
@@ -298,6 +304,7 @@ The "hello world!" application is overrated, let's update the app so that it say
 
     ```sh
     $ docker push $DOCKER_USER/python-hello-world:v2
+
     The push refers to a repository [docker.io/jzaccone/python-hello-world]
     94525867566e: Pushed 
     64d445ecbe93: Layer already exists 
@@ -351,6 +358,7 @@ Image layering enables the docker caching mechanism for builds and pushes. For e
 
 ```sh
 $ docker push $DOCKER_USER/python-hello-world
+
 The push refers to a repository [docker.io/jzaccone/python-hello-world]
 94525867566e: Pushed 
 64d445ecbe93: Layer already exists 

@@ -24,12 +24,19 @@ We are going to use the Docker CLI to run our first container.
 
 1. Open a terminal on your local computer
 
-1. Run `docker container run -t ubuntu top`
+1. Save your username into a variable, so that you can copy/paste the rest of the commands for this lab. Replace the command below with your username.
+
+    ```
+    $ export MYUSERNAME=[username]
+    ```
+
+1. Start a container
 
     Use the `docker container run` command to run a container with the ubuntu image using the `top` command. The `-t` flags allocate a pseudo-TTY which we need for the `top` to work correctly.
 
     ```sh
-    $ docker container run -it ubuntu top
+    $ docker container run --name top-$MYUSERNAME -it ubuntu top
+
     Unable to find image 'ubuntu:latest' locally
     latest: Pulling from library/ubuntu
     aafe6b5e13de: Pull complete 
@@ -77,6 +84,7 @@ We are going to use the Docker CLI to run our first container.
 
     ```sh
     $ docker container ls
+
     CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS                         PORTS                       NAMES
     b3ad2a23fab3        ubuntu                     "top"                    29 minutes ago      Up 29 minutes                                              goofy_nobel
     ```
@@ -85,6 +93,7 @@ We are going to use the Docker CLI to run our first container.
 
     ```sh
     $ docker container exec -it b3ad2a23fab3 bash 
+
     root@b3ad2a23fab3:/# 
     ```
 
@@ -98,6 +107,7 @@ We are going to use the Docker CLI to run our first container.
   
     ```sh
     root@b3ad2a23fab3:/# ps -ef
+
     UID        PID  PPID  C STIME TTY          TIME CMD
     root         1     0  0 20:34 ?        00:00:00 top
     root        17     0  0 21:06 ?        00:00:00 bash
@@ -147,7 +157,8 @@ We are going to use the Docker CLI to run our first container.
     Let's run a container using the [official Nginx image](https://store.docker.com/images/nginx) from the Docker Store.
 
     ```sh
-    $ docker container run --detach --publish 8080:80 --name nginx nginx
+    $ docker container run --detach --publish <YOUR PORT>:80 --name nginx-$MYUSERNAME nginx
+
     Unable to find image 'nginx:latest' locally
     latest: Pulling from library/nginx
     36a46ebd5019: Pull complete 
@@ -157,6 +168,8 @@ We are going to use the Docker CLI to run our first container.
     Status: Downloaded newer image for nginx:latest
     5e1bf0e6b926bd73a66f98b3cbe23d04189c16a43d55dd46b8486359f6fdf048
     ```
+
+    `YOUR PORT` = 8000 + `your user#`. For example, for `user040`, the port# is `8040`. 
 
     We are using a couple of new flags here. The `--detach` flag will run this container in the background. The `publish` flag publishes port 80 in the container (the default port for nginx), via port 8080 on our host. Remember that the NET namespace gives processes of the container their own network stack. The `--publish` flag is a feature that allows us to expose networking through the container onto the host. 
 
@@ -168,7 +181,7 @@ We are going to use the Docker CLI to run our first container.
 
     Nginx is a lightweight web server. You can access it on port 8080 on your localhost.
 
-1. Access the nginx server on http://localhost:8080. If you are using the cloud shell, expand the eye icon on the upper right for the **Port to preview** menu and select `8080`.
+1. Access the nginx server on http://localhost:<YOUR PORT>. If you are using the cloud shell, expand the eye icon on the upper right for the **Port to preview** menu and select `<YOUR PORT>`. For example, `8040`.
 
     ![Nginx web page](images/lab1_step2_nginx.png)
 
@@ -177,7 +190,8 @@ We are going to use the Docker CLI to run our first container.
     Now, run a mongoDB server. We will use the [official mongoDB image](https://store.docker.com/images/mongo) from the Docker Store. Instead of using the `latest` tag (which is the default if no tag is specified), we will use a specific version of the mongo image: 3.4.
 
     ```sh
-    $ docker container run --detach --publish 8081:27017 --name mongo mongo:3.4
+    $ docker container run --detach --publish <YOUR PORT>:27017 --name mongo-$MYUSERNAME mongo:3.4
+
     Unable to find image 'mongo:3.4' locally
     3.4: Pulling from library/mongo
     d13d02fa248d: Already exists 
@@ -196,9 +210,11 @@ We are going to use the Docker CLI to run our first container.
     d8f614a4969fb1229f538e171850512f10f490cb1a96fca27e4aa89ac082eba5
     ```
 
-    Again, since this is the first time we are running a mongo container, we will pull down the mongo image from the Docker Store. We are using the `--publish` flag to expose the 27017 mongo port on our host. We have to use a port other than 8080 for the host mapping, since that port is already exposed on our host. Again refer to the [official docs](https://store.docker.com/images/mongo) on the Docker Store to get more details about using the mongo image.
+    `YOUR PORT` = 7000 + `your user#`. For example, for `user040`, the port# is `7040`. 
 
-1. Access http://localhost:8081 to see some output from mongo. If you are using play-with-docker, look for the `8080` link near the top of the page.
+    Again, since this is the first time we are running a mongo container, we will pull down the mongo image from the Docker Store. We are using the `--publish` flag to expose the 27017 mongo port on our host. We have to use a port other than `<YOUR PORT>` for the host mapping, since that port is already exposed on our host. Again refer to the [official docs](https://store.docker.com/images/mongo) on the Docker Store to get more details about using the mongo image.
+
+1. Access http://localhost:<YOUR PORT> to see some output from mongo. If you are using play-with-docker, look for the `<YOUR PORT>` link near the top of the page.
 
     ![Mongo DB response to http request](images/lab1_step2_mongo.png)
 
