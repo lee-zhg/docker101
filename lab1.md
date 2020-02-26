@@ -80,19 +80,21 @@ We are going to use the Docker CLI to run our first container.
     $ 
     ```
 
-    In the new terminal, use the `docker container ls` command to get the ID of the running container you just created.
+    In the new terminal, use the `docker container ls | grep "$MYUSERNAME"` command to get the `Container ID` of the running container you just created.
 
     ```sh
-    $ docker container ls
+    $ docker container ls | grep "$MYUSERNAME"
 
-    CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS                         PORTS                       NAMES
-    b3ad2a23fab3        ubuntu                     "top"                    29 minutes ago      Up 29 minutes                                              goofy_nobel
+    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+    2d6e886432c4        ubuntu              "top"               2 minutes ago       Up 2 minutes                            top-user040
     ```
+
+    > Note: verify your  unique container name, for example `top-user040`. And, you'll use the unique `Container ID` in the step below. So, replace the `Container ID` in the next command with your unique one.
 
     Then use that id to run `bash` inside that container using the `docker container exec` command. Since we are using bash and want to interact with this container from our terminal, use `-it` flags to run using interactive mode while allocating a psuedo-terminal.
 
     ```sh
-    $ docker container exec -it b3ad2a23fab3 bash 
+    $ docker container exec -it 2d6e886432c4 bash 
 
     root@b3ad2a23fab3:/# 
     ```
@@ -181,7 +183,7 @@ We are going to use the Docker CLI to run our first container.
 
     Nginx is a lightweight web server. You can access it on port 8080 on your localhost.
 
-1. Access the nginx server on http://localhost:<YOUR PORT>. If you are using the cloud shell, expand the eye icon on the upper right for the **Port to preview** menu and select `<YOUR PORT>`. For example, `8040`.
+1. Access the nginx server on `http://localhost:<YOUR PORT>`. If you are using the cloud shell, expand the eye icon on the upper right for the **Port to preview** menu and select `<YOUR PORT>`. For example, `8040`.
 
     ![Nginx web page](images/lab1_step2_nginx.png)
 
@@ -214,18 +216,17 @@ We are going to use the Docker CLI to run our first container.
 
     Again, since this is the first time we are running a mongo container, we will pull down the mongo image from the Docker Store. We are using the `--publish` flag to expose the 27017 mongo port on our host. We have to use a port other than `<YOUR PORT>` for the host mapping, since that port is already exposed on our host. Again refer to the [official docs](https://store.docker.com/images/mongo) on the Docker Store to get more details about using the mongo image.
 
-1. Access http://localhost:<YOUR PORT> to see some output from mongo. If you are using play-with-docker, look for the `<YOUR PORT>` link near the top of the page.
+1. Access `http://localhost:<YOUR PORT>` to see some output from mongo. If you are using play-with-docker, look for the `<YOUR PORT>` link near the top of the page.
 
     ![Mongo DB response to http request](images/lab1_step2_mongo.png)
 
-1. Check your running containers with `docker container ls`
+1. Check your running containers with `docker container ls | grep "$MYUSERNAME"`
 
     ```sh
-    $ docker container ls
+    $ docker container ls | grep "$MYUSERNAME"
     CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS              PORTS                     NAMES
-    d6777df89fea        nginx               "nginx -g 'daemon ..."   Less than a second ago   Up 2 seconds        0.0.0.0:8080->80/tcp      nginx
-    ead80a0db505        mongo               "docker-entrypoint..."   17 seconds ago           Up 19 seconds       0.0.0.0:8081->27017/tcp   mongo
-    af549dccd5cf        ubuntu              "top"                    5 minutes ago            Up 5 minutes                                  priceless_kepler
+    597e83da9c3e        mongo:3.4           "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        0.0.0.0:7040->27017/tcp   mongo-user040
+    ee3985a474f4        nginx               "nginx -g 'daemon of…"   7 minutes ago       Up 7 minutes        0.0.0.0:8040->80/tcp                 nginx-user040
     ```
 
     You should see that you have an Nginx web server container, and a MongoDB container running on your host. Note that we have not configured these containers to talk to each other.
@@ -246,26 +247,30 @@ We are going to use the Docker CLI to run our first container.
 
 Completing this lab results in a bunch of running containers on your host. Let's clean these up.
 
-1. First get a list of the containers running using `docker container ls`. 
+1. First get a list of the containers running using `docker container ls | grep "$MYUSERNAME"`. 
 
     ```sh
-    $ docker container ls
+    $ docker container ls | grep "$MYUSERNAME"
     CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                     NAMES
-    d6777df89fea        nginx               "nginx -g 'daemon ..."   3 minutes ago       Up 3 minutes        0.0.0.0:8080->80/tcp      nginx
-    ead80a0db505        mongo               "docker-entrypoint..."   3 minutes ago       Up 3 minutes        0.0.0.0:8081->27017/tcp   mongo
-    af549dccd5cf        ubuntu              "top"                    8 minutes ago       Up 8 minutes                                  priceless_kepler
+    597e83da9c3e        mongo:3.4           "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        0.0.0.0:7040->27017/tcp   mongo-user040
+    ee3985a474f4        nginx               "nginx -g 'daemon of…"   7 minutes ago       Up 7 minutes        0.0.0.0:8040->80/tcp                 nginx-user040
     ```
 
 1. Next,  run `docker container stop [container id]` for each container in the list. You can also use the names of the containers that you specified before.
 
     ```sh
-    $ docker container stop d67 ead af5
-    d67
-    ead
-    af5
+    $ docker container stop 597 ee3
+    597
+    ee3
     ```
 
 **Note**: You only have to reference enough digits of the ID to be unique. Three digits is almost always enough.
+
+1. Retrieve all containers including the ones who is not running.
+
+    ```sh
+    $ docker container ls -a | grep "$MYUSERNAME"
+    ```
 
 1. Remove the stopped containers
 
@@ -286,6 +291,13 @@ Completing this lab results in a bunch of running containers on your host. Let's
 
     Total reclaimed space: 12B
     ```
+
+1. Verify that all not running containers are removed.
+
+    ```sh
+    $ docker container ls -a | grep "$MYUSERNAME"
+    ```
+
 
 ## Summary
 
