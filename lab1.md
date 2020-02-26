@@ -264,7 +264,7 @@ Completing this lab results in a bunch of running containers on your host. Let's
     ee3
     ```
 
-**Note**: You only have to reference enough digits of the ID to be unique. Three digits is almost always enough.
+    **Note**: You only have to reference enough digits of the ID to be unique. Three digits is almost always enough.
 
 1. Retrieve all containers including the ones who is not running.
 
